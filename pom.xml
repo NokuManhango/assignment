@@ -9,9 +9,13 @@
   <groupId>edu.tus.employee</groupId>
   <artifactId>employee-app</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+  <!-- Merged Properties Section -->
   <properties>
     <java.version>11</java.version>
     <spring-cloud.version>2020.0.1</spring-cloud.version>
+    <sonar.java.binaries>${project.build.directory}/classes</sonar.java.binaries> <!-- SonarQube binaries path -->
+    <sonar.host.url>http://localhost:9000</sonar.host.url> <!-- SonarQube host URL -->
   </properties>
   
   <!-- Dependencies -->
@@ -69,11 +73,5 @@
       </plugin>
     </plugins>
   </build>
-
-  <!-- SonarQube properties (Sonar Scanner settings) -->
-  <properties>
-    <sonar.java.binaries>${project.build.directory}/classes</sonar.java.binaries> <!-- Point to compiled classes -->
-    <sonar.host.url>http://localhost:9000</sonar.host.url> <!-- Update if SonarQube is running on a different host -->
-  </properties>
 
 </project>
