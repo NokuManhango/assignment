@@ -33,9 +33,72 @@ public class EmployeeController {
 	@Autowired
 	ErrorValidation errorValidation;
 	
-	//TO DO
+	@GetMapping
+	public String testOK() {
+		return "OK";
+	}
+	
+	@GetMapping("/by-email/{email}")
+    public ResponseEntity<?> searchEmployees(@PathVariable String email) {
+        Employee employee = empRepository.findByEmailAddress(email);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+	
+	@GetMapping("/joined-after/{date}")
+    public ResponseEntity<List<Employee>> getEmployeesByJoinDateAfter(
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<Employee> employees = empRepository.findByDateOfJoiningAfter(date);
+        if (!employees.isEmpty()) {
+            return ResponseEntity.ok(employees);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+	
+	@GetMapping("/salary-range/{minSalary}/{maxSalary}")
+    public ResponseEntity<List<Employee>> getEmployeesBySalaryRange(
+            @PathVariable("minSalary") double minSalary,
+            @PathVariable("maxSalary") double maxSalary) {
+        List<Employee> employees = empRepository.findBySalaryBetween(minSalary, maxSalary);
+        if (!employees.isEmpty()) {
+            return ResponseEntity.ok(employees);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+	
+	@GetMapping("/dept-salary/{department}/{minSalary}")
+    public ResponseEntity<List<Employee>> getEmployeesByDepartmentAndMinSalary(
+            @PathVariable("department") String department,
+            @PathVariable("minSalary") double minSalary) {
+        List<Employee> employees = empRepository.findByDepartmentAndSalaryGreaterThanEqual(department, minSalary);
+        if (!employees.isEmpty()) {
+            return ResponseEntity.ok(employees);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+	
+	@GetMapping("/dept-number/{department}")
+    public ResponseEntity<Long> getNumberEmployeesforDepartment(
+            @PathVariable("department") String department) {
+        return ResponseEntity.ok(empRepository.countByDepartment(department));
+    }
+	
+	@PostMapping
+    public ResponseEntity createEmployee(@RequestBody Employee employee) {
+        try {
+        	errorValidation.validateEmployee(employee);
+            Employee savedEmployee = empRepository.save(employee);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
+        } catch (EmployeeException e) {
+        	ErrorMessage errorMessage=new ErrorMessage(e.getMessage());
+			return ResponseEntity.badRequest().body(errorMessage);
+        }
+    }
 
 }
-
-
-

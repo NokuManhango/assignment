@@ -10,5 +10,18 @@ import edu.tus.employee.model.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-	//TO DO
+	Employee findByEmailAddress(String emailId);
+	
+    // Find employees who joined after a certain date
+    List<Employee> findByDateOfJoiningAfter(LocalDate date);
+
+    // Find employees within a specific salary range
+    List<Employee> findBySalaryBetween(double minSalary, double maxSalary);
+
+    List<Employee> findByDepartmentAndSalaryGreaterThanEqual(String department, double minSalary);
+
+    Long countByDepartment(String department);
+
 }
+
+// attemtesde
